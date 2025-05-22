@@ -1,0 +1,93 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #fff6eb;
+}
+
+header {
+    background: #ffcc80;
+    text-align: center;
+    padding: 10px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 60px);
+}
+
+.sidebar {
+    background-color: #ffa726;
+    width: 220px;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.sidebar button {
+    background-color: white;
+    color: #ffa726;
+    border: none;
+    padding: 10px;
+    margin: 5px 0;
+    width: 100%;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+hr {
+    width: 100%;
+    border: 1px solid #fff;
+    margin: 20px 0;
+}
+
+.sudoku-board {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 60px);
+    grid-template-rows: repeat(4, 60px);
+    gap: 5px;
+    margin-bottom: 20px;
+}
+
+.cell {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.controls button {
+    padding: 10px 20px;
+    background-color: #ffa726;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
