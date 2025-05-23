@@ -32,7 +32,7 @@ $isLoggedIn = isset($_SESSION['user']);
                 </form>
             </div>
         </aside>
-
+        <!--Cokolwiek-->
         <main class="sudoku-board">
             <form method="post">
                 <div class="grid">
