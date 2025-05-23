@@ -11,7 +11,9 @@ $isLoggedIn = isset($_SESSION['user']);
 </head>
 <body>
     <header>
-        <h1>MiniSUDOKU</h1>
+        <?php
+            include_once "header.php";
+        ?>
     </header>
     <div class="container">
         <aside class="sidebar">

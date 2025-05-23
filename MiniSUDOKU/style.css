@@ -5,7 +5,9 @@ body {
 }
 
 header {
-    background: #ffcc80;
+    background-color: #5d37a6;
+    color: #ebddc0;
+    font-family: Tahoma;
     text-align: center;
     padding: 10px;
     font-size: 24px;
