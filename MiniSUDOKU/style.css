@@ -5,9 +5,9 @@ body {
 }
 
 header {
-    background-color: #5d37a6;
+    background-color:#9e8db9;
     color: #ebddc0;
-    font-family: Tahoma;
+    font-family: 'Courier New';
     text-align: center;
     padding: 10px;
     font-size: 24px;
@@ -20,7 +20,7 @@ header {
 }
 
 .sidebar {
-    background-color: #ffa726;
+    background-color:  #7c64b1;
     width: 220px;
     padding: 20px;
     color: white;
@@ -38,7 +38,7 @@ header {
 
 .sidebar button {
     background-color: white;
-    color: #ffa726;
+    color: #5d37a6;
     border: none;
     padding: 10px;
     margin: 5px 0;
@@ -46,6 +46,10 @@ header {
     border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
+}
+.sidebar button:hover{
+    background-color: #ebddc0;
+    font-size: 15px;
 }
 
 .locked {
