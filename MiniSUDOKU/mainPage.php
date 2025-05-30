@@ -1,42 +1,42 @@
 <?php
     session_start();
-    $isLoggedIn = isset($_SESSION['user']);
-    function generateValidSudoku() {
-        $baseGrid = [[1, 2, 3, 4],
+    $isLoggedIn = isset($_SESSION['user']); //sesja logowania
+    function generateValidSudoku() {  //funkcja generowania tablicy sudoku
+        $baseGrid = [[1, 2, 3, 4],    
                      [3, 4, 1, 2],
                      [2, 1, 4, 3],
-                     [4, 3, 2, 1]];
+                     [4, 3, 2, 1]]; //podstawowa baza sudoku
     
-        shuffle($baseGrid);
+        shuffle($baseGrid);    //mieszanie wierszy - zamiana miejsc
         for ($i = 0; $i < 4; $i += 2) {
             if (rand(0, 1)) {
                 [$baseGrid[$i], $baseGrid[$i + 1]] = [$baseGrid[$i + 1], $baseGrid[$i]];
             }
         }
     
-        $transposed = array_map(null, ...$baseGrid);
-        shuffle($transposed);
+        $transposed = array_map(null, ...$baseGrid);  //zamiana kolumn na wiersze
+        shuffle($transposed); //mieszanie kolumn "wierszy"
         for ($i = 0; $i < 4; $i += 2) {
             if (rand(0, 1)) {
                 [$transposed[$i], $transposed[$i + 1]] = [$transposed[$i + 1], $transposed[$i]];
             }
         }
     
-        $finalGrid = array_map(null, ...$transposed);
+        $finalGrid = array_map(null, ...$transposed); //wracanie do układu wierszy i kolumn
     
-        $shown = [];
+        $shown = []; //losowanie 5 widocznych liczb
         while (count($shown) < 6) {
             $i = rand(0, 3);
             $j = rand(0, 3);
             $shown["$i-$j"] = true;
         }
     
-        $_SESSION['full_solution'] = $finalGrid;
-        $_SESSION['shown'] = $shown;
+        $_SESSION['full_solution'] = $finalGrid; //"zapis" poprawnego sudoku
+        $_SESSION['shown'] = $shown; //"zapis" pokazywanych liczb
     }
     
     if (!isset($_SESSION['full_solution']) || isset($_POST['new_game'])) {
-        generateValidSudoku();
+        generateValidSudoku();  //generowanie nowego sudoku
     }    
 ?>
 <!DOCTYPE html>
@@ -50,24 +50,23 @@
 <body>
     <header>
         <?php
-            include_once "header.php";
+            include_once "header.php"; //nagłówek
         ?>
     </header>
     <div class="container">
         <aside class="sidebar">
             <?php
-                include_once "sidebar.php";
+                include_once "sidebar.php";  //nawigacja boczna
             ?>
         </aside>
-        <!--Cokolwiek-->
         <main class="sudoku-board">
             <form method="post">
                 <div class="board-wrapper">
                     <div class="grid">
                         <?php for ($i = 0; $i < 4; $i++): ?>
                             <?php for ($j = 0; $j < 4; $j++): 
-                                $name = "cell[$i][$j]";
-                                $isPrefilled = isset($_SESSION['shown']["$i-$j"]);
+                                $name = "cell[$i][$j]"; //komórka, pole?
+                                $isPrefilled = isset($_SESSION['shown']["$i-$j"]); //odczytanie "lokalizacji" ujawnionych liczb
                                 $value = $isPrefilled
                                     ? $_SESSION['full_solution'][$i][$j]
                                     : ($_POST['cell'][$i][$j] ?? '');
