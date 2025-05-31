@@ -61,6 +61,9 @@
         </aside>
         <main class="sudoku-board">
             <form method="post">
+                <div id="overlay" class="overlay">
+                    <button type="button" id="startTimerBtn">Czas start</button>
+                </div>
                 <div class="board-wrapper">
                     <div class="grid">
                         <?php 
@@ -74,8 +77,10 @@
                             
                                     $class = $isPrefilled ? 'prefilled' : 'userfill';
                                     $readonly = $isPrefilled ? 'readonly' : '';
-                            
-                                    echo '<input type="text" name="' . $name . '" maxlength="1" pattern="[1-4]" class="cell ' . $class . '" value="' . htmlspecialchars($value) . '" ' . $readonly . '>';
+                                    $isIncorrect = isset($_POST['solve']) && !$isPrefilled && $_SESSION['full_solution'][$i][$j] != $value;
+                                    $extraClass = $isIncorrect ? ' incorrect' : '';
+                                    $disabled = isset($_POST['solve']) ? 'readonly' : '';
+                                    echo '<input type="text" name="' . $name . '" maxlength="1" pattern="[1-4]" class="cell ' . $class . $extraClass . '" value="' . htmlspecialchars($value) . '" ' . $readonly . ' ' . $disabled . '>';
                                 }
                             }                            
                         ?>
@@ -95,20 +100,56 @@
                                         }
                                     }
                                 }
-                                echo round(($correct / $total) * 100) . "%";
+                                $percentage = round(($correct / $total) * 100);
+                                $elapsed = $_POST['elapsed_time'] ?? 0;
+                                $points = max(0, 10000 - ($elapsed * 10) - ((100 - $percentage) * 100));
+
+                                echo "$percentage%<br>Punkty: $points<br>Czas: $elapsed s";
                             } else {
-                                echo "0%";
+                                echo "0%<br>Punkty: 0<br>Czas: 0 s";
                             }
                             ?>
                         </div>
                     </div>
                 </div>
                 <div class="controls">
-                    <button type="submit" name="solve">Rozwiąż</button>
+                    <button type="submit" name="solve" id="solveBtn">Rozwiąż</button>
+                    <button type="button" id="stopTimerBtn">Stop</button>
+                    <button type="button" id="clearBoardBtn">Wyczyść planszę</button>
                 </div>
+                <input type="hidden" name="elapsed_time" id="elapsed_time" value="0">
             </form>
         </main>
-
     </div>
+
+    <script>
+        let startTime = 0;
+        let interval = null;
+
+        function startTimer() {
+            document.getElementById('overlay').style.display = 'none';
+            startTime = Date.now() - (parseInt(document.getElementById('elapsed_time').value) * 1000 || 0);
+            interval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('elapsed_time').value = elapsed;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(interval);
+            document.getElementById('overlay').style.display = 'flex';
+        }
+
+        function clearBoard() {
+            document.querySelectorAll('.userfill').forEach(input => input.value = '');
+        }
+
+        window.onload = () => {
+            document.getElementById('startTimerBtn').addEventListener('click', startTimer);
+            document.getElementById('stopTimerBtn').addEventListener('click', stopTimer);
+            document.getElementById('clearBoardBtn').addEventListener('click', clearBoard);
+        }
+    </script>
+
 </body>
 </html>

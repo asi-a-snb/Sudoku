@@ -171,3 +171,32 @@ hr {
     font-weight: bold;
     color: #5d37a6;
 }
+
+.overlay {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 60px);
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay button {
+    font-size: 24px;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 20px;
+    background-color: #5d37a6;
+    color: white;
+    cursor: pointer;
+}
+
+.incorrect {
+    background-color: #f99;
+    border: 2px solid red;
+}
+
