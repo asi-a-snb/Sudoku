@@ -63,25 +63,22 @@
             <form method="post">
                 <div class="board-wrapper">
                     <div class="grid">
-                        <?php for ($i = 0; $i < 4; $i++): ?>
-                            <?php for ($j = 0; $j < 4; $j++): 
-                                $name = "cell[$i][$j]"; //komórka, pole?
-                                $isPrefilled = isset($_SESSION['shown']["$i-$j"]); //odczytanie "lokalizacji" ujawnionych liczb
-                                $value = $isPrefilled
-                                    ? $_SESSION['full_solution'][$i][$j]
-                                    : ($_POST['cell'][$i][$j] ?? '');
-                                ?>
-                                <input
-                                    type="text"
-                                    name="<?= $name ?>"
-                                    maxlength="1"
-                                    pattern="[1-4]"
-                                    class="cell <?= $isPrefilled ? 'prefilled' : 'userfill' ?>"
-                                    value="<?= htmlspecialchars($value) ?>"
-                                    <?= $isPrefilled ? 'readonly' : '' ?>
-                                >
-                            <?php endfor; ?>
-                        <?php endfor; ?>
+                        <?php 
+                            for ($i = 0; $i < 4; $i++) {
+                                for ($j = 0; $j < 4; $j++) {
+                                    $name = "cell[$i][$j]";
+                                    $isPrefilled = isset($_SESSION['shown']["$i-$j"]);
+                                    $value = $isPrefilled
+                                        ? $_SESSION['full_solution'][$i][$j]
+                                        : (isset($_POST['cell'][$i][$j]) ? $_POST['cell'][$i][$j] : '');
+                            
+                                    $class = $isPrefilled ? 'prefilled' : 'userfill';
+                                    $readonly = $isPrefilled ? 'readonly' : '';
+                            
+                                    echo '<input type="text" name="' . $name . '" maxlength="1" pattern="[1-4]" class="cell ' . $class . '" value="' . htmlspecialchars($value) . '" ' . $readonly . '>';
+                                }
+                            }                            
+                        ?>
                     </div>
                     <div class="score-panel">
                         <p>Twój wynik:</p>
