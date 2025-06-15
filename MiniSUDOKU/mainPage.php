@@ -61,9 +61,10 @@
         </aside>
         <main class="sudoku-board">
             <form method="post">
-                <div id="overlay" class="overlay">
-                    <button type="button" id="startTimerBtn">Czas start</button>
-                </div>
+            <div id="overlay" class="overlay" style="<?php echo isset($_POST['solve']) ? 'display: none;' : ''; ?>">
+                <button type="button" id="startTimerBtn"><i class="bi bi-play"></i></button>
+            </div>
+
                 <div class="board-wrapper">
                     <div class="grid">
                         <?php 
@@ -81,6 +82,7 @@
                                     $extraClass = $isIncorrect ? ' incorrect' : '';
                                     $disabled = isset($_POST['solve']) ? 'readonly' : '';
                                     echo '<input type="text" name="' . $name . '" maxlength="1" pattern="[1-4]" class="cell ' . $class . $extraClass . '" value="' . htmlspecialchars($value) . '" ' . $readonly . ' ' . $disabled . '>';
+
                                 }
                             }                            
                         ?>
@@ -104,7 +106,7 @@
                                 $elapsed = $_POST['elapsed_time'] ?? 0;
                                 $points = max(0, 10000 - ($elapsed * 10) - ((100 - $percentage) * 100));
 
-                                echo "$percentage%<br>Punkty: $points<br>Czas: $elapsed s";
+                                echo "$percentage%<br>Punkty: $points<br><span id='live-time'>Czas: $elapsed s</span>";
                             } else {
                                 echo "0%<br>Punkty: 0<br>Czas: 0 s";
                             }
@@ -114,8 +116,8 @@
                 </div>
                 <div class="controls">
                     <button type="submit" name="solve" id="solveBtn">Rozwiąż</button>
-                    <button type="button" id="stopTimerBtn">Stop</button>
-                    <button type="button" id="clearBoardBtn">Wyczyść planszę</button>
+                    <button type="button" id="stopTimerBtn"><i class="bi bi-stop-circle"></i></button>
+                    <button type="button" id="clearBoardBtn"><i class="bi bi-x-circle"></i></button>
                 </div>
                 <input type="hidden" name="elapsed_time" id="elapsed_time" value="0">
             </form>
