@@ -1,7 +1,11 @@
 <?php
     
     session_start();
-    //require_once 'db.php';
+    $conn = mysqli_connect("localhost", "root", "", "minisudoku");
+
+    if (!$conn) {
+        die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
+    }
     
     $isLoggedIn = isset($_SESSION['user']);
     $username = $isLoggedIn ? $_SESSION['user']['username'] : '';

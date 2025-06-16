@@ -8,8 +8,8 @@ CREATE TABLE achievements (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    score INT NOT NULL,
+    points INT NOT NULL,
     time_seconds INT NOT NULL,
-    accuracy_percent DECIMAL(5,2) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    precent_correct DECIMAL(5,2) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) 
 );
