@@ -1,6 +1,44 @@
 <?php
+    
     session_start();
-    $isLoggedIn = isset($_SESSION['user']); //sesja logowania
+    //require_once 'db.php';
+    
+    $isLoggedIn = isset($_SESSION['user']);
+    $username = $isLoggedIn ? $_SESSION['user']['username'] : '';
+    $avatar = $isLoggedIn ? $_SESSION['user']['avatar_path'] : 'avatars/incognito.jpg';
+    
+    // Obsługa logowania
+    $loginError = '';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+        $inputUser = $_POST['username'];
+        $inputPass = $_POST['password'];
+    
+        $query = "SELECT * FROM users WHERE username = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "s", $inputUser);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+    
+        if ($row = mysqli_fetch_assoc($result)) {
+            if (password_verify($inputPass, $row['password_hash'])) {
+                $_SESSION['user'] = $row;
+                header("Location: index.php");
+                exit;
+            } else {
+                $loginError = "Nieprawidłowe hasło.";
+            }
+        } else {
+            $loginError = "Nie znaleziono użytkownika.";
+        }
+    }
+    
+    // Obsługa wylogowania
+    if (isset($_POST['logout'])) {
+        session_destroy();
+        header("Location: index.php");
+        exit;
+    }
+    
     function generateValidSudoku() {  //funkcja generowania tablicy sudoku
         $baseGrid = [[1, 2, 3, 4],    
                      [3, 4, 1, 2],
