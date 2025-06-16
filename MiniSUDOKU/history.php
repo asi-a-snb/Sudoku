@@ -1,5 +1,6 @@
 <?php
     session_start();
+    $conn = mysqli_connect("localhost", "root", "", "minisudoku"); //połączenie
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -27,3 +28,6 @@
     </div>
 </body>
 </html>
+<?php
+    mysqli_close($conn);
+?>
