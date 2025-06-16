@@ -1,35 +1,35 @@
 <?php
 
-    $conn = mysqli_connect("localhost", "root", "", "minisudoku");
+    $conn = mysqli_connect("localhost", "root", "", "minisudoku"); //połączenie z bazą
 
     if (!$conn) {
-        die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
+        die("Błąd połączenia z bazą danych: " . mysqli_connect_error()); //błąd połączenia z bazą
     }
 
-$registerError = "";
+    $registerError = ""; //error tworzenia konta
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
-    $avatar = $_POST['avatar'] ?? 'avatars/incognito.jpg';
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $username = $_POST['username']; //nazwa użytkownika
+        $password = $_POST['password']; //hasło
+        $avatar = $_POST['avatar']; //wybranie avataru
 
-    // Sprawdzenie czy użytkownik istnieje
-    $stmt = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ?");
-    mysqli_stmt_bind_param($stmt, "s", $username);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_store_result($stmt);
-
-    if (mysqli_stmt_num_rows($stmt) > 0) {
-        $registerError = "Użytkownik o tej nazwie już istnieje.";
-    } else {
-        $hashed = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password_hash, avatar_path) VALUES (?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "sss", $username, $hashed, $avatar);
+        // Sprawdzenie czy nazwa użytkownika się nie powtarza w bazie
+        $stmt = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ?");
+        mysqli_stmt_bind_param($stmt, "s", $username);
         mysqli_stmt_execute($stmt);
-        header("Location: mainPage.php");
-        exit;
+        mysqli_stmt_store_result($stmt);
+
+        if (mysqli_stmt_num_rows($stmt) > 0) {
+            $registerError = "Użytkownik o tej nazwie już istnieje."; //gdy istnieje "error"
+        } else {
+            $hashed = password_hash($password, PASSWORD_DEFAULT); //kodowanie hasła
+            $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password_hash, avatar_path) VALUES (?, ?, ?)"); //wprowadzenie nowego użytkownika do bazy
+            mysqli_stmt_bind_param($stmt, "sss", $username, $hashed, $avatar);
+            mysqli_stmt_execute($stmt);
+            header("Location: mainPage.php"); //przekierowanie do strony głównej
+            exit;
+        }
     }
-}
 ?>
 
 <!DOCTYPE html>
