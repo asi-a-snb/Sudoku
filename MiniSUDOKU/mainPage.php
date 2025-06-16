@@ -132,34 +132,65 @@
                         <p>Twój wynik:</p>
                         <div class="score">
                             <?php
-                            if (isset($_POST['solve'])) {
-                                $correct = 0;
-                                $total = 0;
-                                foreach ($_POST['cell'] as $i => $row) {
-                                    foreach ($row as $j => $value) {
-                                        $total++;
-                                        if ($_SESSION['full_solution'][$i][$j] == $value) {
-                                            $correct++;
+                                if (isset($_POST['solve'])) {
+                                    $correct = 0;
+                                    $total = 0;
+                                    foreach ($_POST['cell'] as $i => $row) {
+                                        foreach ($row as $j => $value) {
+                                            $total++;
+                                            if ($_SESSION['full_solution'][$i][$j] == $value) {
+                                                $correct++;
+                                            }
                                         }
                                     }
-                                }
-                                $percentage = round(($correct / $total) * 100);
-                                $elapsed = $_POST['elapsed_time'] ?? 0;
-                                $points = max(0, 10000 - ($elapsed * 10) - ((100 - $percentage) * 100));
+                                
+                                    $percentage = round(($correct / $total) * 100);
+                                    $elapsed = $_POST['elapsed_time'] ?? 0;
+                                    $points = max(0, 10000 - ($elapsed * 10) - ((100 - $percentage) * 100));
+                                    $_SESSION['last_cell'] = $_POST['cell'];
+                                    $_SESSION['last_elapsed'] = $elapsed;
+                                    $_SESSION['last_percentage'] = $percentage;
+                                    $_SESSION['last_points'] = $points;
+                                
+                                    echo "$percentage%<br>Punkty: $points<br><span id='live-time'>Czas: $elapsed s</span>";
+                                    
+                                } else {
+                                    echo "0%<br>Punkty: 0<br>Czas: 0 s";
+                                }  
 
-                                echo "$percentage%<br>Punkty: $points<br><span id='live-time'>Czas: $elapsed s</span>";
-                            } else {
-                                echo "0%<br>Punkty: 0<br>Czas: 0 s";
-                            }
+                                if (isset($_POST['save_score'])) {
+                                
+                                    if (!isset($_SESSION['score_saved']) && isset($_SESSION['last_cell'])) {
+                                        $user_id = $_SESSION['user']['id'];
+                                        $elapsed = $_SESSION['last_elapsed'];
+                                        $percentage = $_SESSION['last_percentage'];
+                                        $points = $_SESSION['last_points'];
+                                
+                                        $stmt = mysqli_prepare($conn, "INSERT INTO achievements (user_id, points, time_seconds, precent_correct) VALUES (?, ?, ?, ?)");
+                                        mysqli_stmt_bind_param($stmt, "iiii", $user_id, $points, $elapsed, $percentage);
+                                
+                                        if (mysqli_stmt_execute($stmt)) {
+                                            echo "<p style='color:purple;'>Wynik zapisany!</p>";
+                                            $_SESSION['score_saved'] = true; 
+                                        }
+                                    } else {
+                                        echo "<p style='color:pink;'>Wynik był już zapisany.</p>";
+                                    }
+                                }
+                                                              
                             ?>
                         </div>
                     </div>
                 </div>
                 <div class="controls">
                     <button type="submit" name="solve" id="solveBtn">Rozwiąż</button>
+                    <?php if (isset($_POST['solve'])): ?>
+                        <button type="submit" name="save_score" id="saveScoreBtn" <?= !$isLoggedIn ? 'class="locked" disabled' : '' ?>><i class="bi bi-download"></i></button>
+                    <?php endif; ?>
                     <button type="button" id="stopTimerBtn"><i class="bi bi-stop-circle"></i></button>
                     <button type="button" id="clearBoardBtn"><i class="bi bi-x-circle"></i></button>
                 </div>
+
                 <input type="hidden" name="elapsed_time" id="elapsed_time" value="0">
             </form>
         </main>
@@ -193,6 +224,8 @@
             document.getElementById('clearBoardBtn').addEventListener('click', clearBoard);
         }
     </script>
-
 </body>
 </html>
+<?php
+    mysqli_close($conn);
+?>
