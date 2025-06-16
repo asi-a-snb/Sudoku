@@ -18,7 +18,7 @@
         }
 
         .achievement-display img.crown {
-            width: 80px;
+            width: 200px;
             height: auto;
             margin-bottom: 15px;
         }
@@ -73,7 +73,7 @@
 
                         echo '
                         <div class="achievement-display">
-                            <img src="images/crown.png" alt="Korona" class="crown" />
+                            <img src="other/crown.png" alt="Korona" class="crown" />
                             <div class="points">' . $achievement['points'] . ' punktów</div>
                             <div class="percent-correct">Poprawność: ' . $achievement['precent_correct'] . '%</div>
                             <div class="time">Czas: ' . $timeFormatted . '</div>
