@@ -26,7 +26,7 @@
         if ($row = mysqli_fetch_assoc($result)) {
             if (password_verify($inputPass, $row['password_hash'])) {
                 $_SESSION['user'] = $row;
-                header("Location: index.php");
+                header("Location: mainPage.php");
                 exit;
             } else {
                 $loginError = "Nieprawidłowe hasło.";
@@ -39,7 +39,7 @@
     // Obsługa wylogowania
     if (isset($_POST['logout'])) {
         session_destroy();
-        header("Location: index.php");
+        header("Location: mainPage.php");
         exit;
     }
     

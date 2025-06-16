@@ -38,22 +38,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiniSUDOKU rejestracja</title>
+    <link rel="stylesheet" href="style2.css">
 </head>
 <body>
-    
+    <div class="register-box">
+        <h2>Stwórz konto</h2>
+        <hr>
+        <form method="post">
+            <label for="username">Nazwa użytkownika</label>
+            <input type="text" name="username" id="username" placeholder="Nazwa użytkownika" required>
+
+            <label for="password">Hasło</label>
+            <input type="password" name="password" id="password" placeholder="Hasło" required>
+
+            <div class="avatar-choice">
+                <label class="avatar-option">
+                    <input type="radio" name="avatar" value="avatars/boy.jpg" checked>
+                    <img src="avatars/boy.jpg" alt="Chłopiec">
+                </label>
+                <label class="avatar-option">
+                    <input type="radio" name="avatar" value="avatars/girl.jpg">
+                    <img src="avatars/girl.jpg" alt="Dziewczynka">
+                </label>
+            </div>
+
+            <div class="buttons">
+                <a href="mainPage.php" class="back-button">Powrót</a>
+                <button type="submit">Zarejestruj się</button>
+            </div>
+
+            <?php if (!empty($registerError)): ?>
+                <p class="error"><?= $registerError ?></p>
+            <?php endif; ?>
+        </form>
+    </div>
 </body>
 </html>
-<form method="post">
-    <input type="text" name="username" placeholder="Nazwa użytkownika" required><br>
-    <input type="password" name="password" placeholder="Hasło" required><br>
-
-    <!-- Wybór avatara -->
-    <label><input type="radio" name="avatar" value="avatars/boy.jpg" checked> Chłopiec</label><br>
-    <label><input type="radio" name="avatar" value="avatars/girl.jpg"> Dziewczynka</label><br>
-
-    <button type="submit">Zarejestruj się</button>
-
-    <?php if ($registerError): ?>
-        <p style="color:red;"><?= $registerError ?></p>
-    <?php endif; ?>
-</form>
