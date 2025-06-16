@@ -1,42 +1,41 @@
 <?php
-    
-    session_start();
-    $conn = mysqli_connect("localhost", "root", "", "minisudoku");
+    session_start(); //początek sesji
+    $conn = mysqli_connect("localhost", "root", "", "minisudoku"); //połączenie
 
     if (!$conn) {
-        die("Błąd połączenia z bazą danych: " . mysqli_connect_error());
+        die("Błąd połączenia z bazą danych: " . mysqli_connect_error()); //błąd połączenia
     }
     
-    $isLoggedIn = isset($_SESSION['user']);
-    $username = $isLoggedIn ? $_SESSION['user']['username'] : '';
-    $avatar = $isLoggedIn ? $_SESSION['user']['avatar_path'] : 'avatars/incognito.jpg';
+    $isLoggedIn = isset($_SESSION['user']); //sesja logowania użytkownika
+    $username = $isLoggedIn ? $_SESSION['user']['username'] : ''; //nazwa zalogowanego użytkownika
+    $avatar = $isLoggedIn ? $_SESSION['user']['avatar_path'] : 'avatars/incognito.jpg'; //avatar użytkownika
     
-    // Obsługa logowania
-    $loginError = '';
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+    //Logowanie
+    $loginError = ''; //błąd
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) { //logowanie się
         $inputUser = $_POST['username'];
         $inputPass = $_POST['password'];
     
-        $query = "SELECT * FROM users WHERE username = ?";
+        $query = "SELECT * FROM users WHERE username = ?"; //zapytanie do bazy z wyborem użytkowników
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "s", $inputUser);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
     
         if ($row = mysqli_fetch_assoc($result)) {
-            if (password_verify($inputPass, $row['password_hash'])) {
-                $_SESSION['user'] = $row;
+            if (password_verify($inputPass, $row['password_hash'])) { //sprawdzanie hasła
+                $_SESSION['user'] = $row; //sesja użytkownika
                 header("Location: mainPage.php");
                 exit;
             } else {
-                $loginError = "Nieprawidłowe hasło.";
+                $loginError = "Nieprawidłowe hasło."; //brak spójności hała
             }
         } else {
-            $loginError = "Nie znaleziono użytkownika.";
+            $loginError = "Nie znaleziono użytkownika."; //brak użytkownika o takiej nazwie
         }
     }
     
-    // Obsługa wylogowania
+    // Wylogowanie
     if (isset($_POST['logout'])) {
         session_destroy();
         header("Location: mainPage.php");
