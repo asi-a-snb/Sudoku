@@ -6,42 +6,6 @@
         die("Błąd połączenia z bazą danych: " . mysqli_connect_error()); //błąd połączenia
     }
     
-    $isLoggedIn = isset($_SESSION['user']); //sesja logowania użytkownika
-    $username = $isLoggedIn ? $_SESSION['user']['username'] : ''; //nazwa zalogowanego użytkownika
-    $avatar = $isLoggedIn ? $_SESSION['user']['avatar_path'] : 'avatars/incognito.jpg'; //avatar użytkownika
-    
-    //Logowanie
-    $loginError = ''; //błąd
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) { //logowanie się
-        $inputUser = $_POST['username'];
-        $inputPass = $_POST['password'];
-    
-        $query = "SELECT * FROM users WHERE username = ?"; //zapytanie do bazy z wyborem użytkowników
-        $stmt = mysqli_prepare($conn, $query);
-        mysqli_stmt_bind_param($stmt, "s", $inputUser);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-    
-        if ($row = mysqli_fetch_assoc($result)) {
-            if (password_verify($inputPass, $row['password_hash'])) { //sprawdzanie hasła
-                $_SESSION['user'] = $row; //sesja użytkownika
-                header("Location: mainPage.php");
-                exit;
-            } else {
-                $loginError = "Nieprawidłowe hasło."; //brak spójności hała
-            }
-        } else {
-            $loginError = "Nie znaleziono użytkownika."; //brak użytkownika o takiej nazwie
-        }
-    }
-    
-    // Wylogowanie
-    if (isset($_POST['logout'])) {
-        session_destroy();
-        header("Location: mainPage.php");
-        exit;
-    }
-    
     function generateValidSudoku() {  //funkcja generowania tablicy sudoku
         $baseGrid = [[1, 2, 3, 4],    
                      [3, 4, 1, 2],
